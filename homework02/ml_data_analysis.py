@@ -57,10 +57,10 @@ def compare_mass(a_list_of_dicts: List[dict], mass_entry: float, a_key_string: s
         if mass < mass_entry:
             lighter += 1
         elif mass > mass_entry:
-            heavier += 1
-            
+            heavier += 1    
     print(f"Number of meteorites lighter: {lighter}")
     print(f"Number of meteorites heavier: {heavier}")
+    return lighter, heavier
 
 def closest_meteorite(a_list_of_dicts: List[dict], lat: float, lng: float, lat_key: str, lng_key: str) -> float:
     """
@@ -128,7 +128,7 @@ def main():
 
     user_mass_entry = float(input("Enter a mass value: "))
     compare_mass(data['meteorite_landings'], user_mass_entry, 'mass')
-
+    
     # The UT Tower
     target_latitude = 30.2862    
     target_longitude = 97.7394  
