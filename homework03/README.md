@@ -1,7 +1,7 @@
 # Meteorite Landings Data Analysis
 
 ## Purpose
-This repository contains 2 main scripts and 2 testing scripts that are used to analyze meteorite landings data, as well as a Dockerfile used to build an image. The goal is to parse data from a CSV file and print out a few informative statistics, including the amount of meteorites that landed on given years, the comparison of masses by an input from the user, and the ability to gather which meteorite landed closest to a point (in this case I used the UT Tower coordinates). Overall, this project was used to learn how to parse data from a CSV file (and dealing with big data sets), unit testing, the use of `pytest`, and learn the whole process of building a Docker image. 
+This repository contains 2 main scripts and 2 testing scripts that are used to analyze meteorite landings data, as well as a Dockerfile used to build an image. The goal is to parse data from a CSV file and print out a few informative statistics, including the amount of meteorites that landed on given years, the comparison of masses to 100g, and the ability to gather which meteorite landed closest to a point (in this case I used the UT Tower coordinates). Overall, this project was used to learn how to parse data from a CSV file (and dealing with big data sets), unit testing, the use of `pytest`, and the whole process of building a Docker image. 
 
 ## Description of Scripts
 * `gcd_algorithm.py`: Script that calculates the distance between two points using the greater circle distance formula. 
@@ -30,7 +30,7 @@ You should have a file named `gh4g-9sfh.csv` in your repository now.
   ```python
   pytest
   ```
-6. Now we want to build an image using our Dockerfile, so run this command:
+6. Now you want to build an image using our Dockerfile, so run this command:
    ```python
    docker build -t <dockerhubusername>/<code>:<version> . 
    ```
@@ -38,7 +38,7 @@ You should have a file named `gh4g-9sfh.csv` in your repository now.
    ```python
    docker build -t nicoleolv/ml_data_analysis.py:1.0 . 
    ```
-   **DO NOT FORGET THE DOT . AT THE END**
+   **DO NOT FORGET THE DOT . AT THE END & MAKE SURE YOU'RE IN THE DIRECTORY (homework03) THAT CONTAINS ALL YOUR FILES**
 7. Ensure your image has been built by executing this command:
    ```python
    docker images
@@ -48,10 +48,24 @@ You should have a file named `gh4g-9sfh.csv` in your repository now.
   REPOSITORY                   TAG       IMAGE ID       CREATED          SIZE
   nicoleolv/ml_data_analysis   1.0      fbc71f1bf83a   6 seconds ago    446MB
    ```
-8. 
+8. Then, to test/run the containerized code, execute this:
+  ```python
+  docker run --rm \
+             -v $PWD/gh4g-9sfh.csv:/data/gh4g-9sfh.csv \
+             nicoleolv/ml_data_analysis:1.0 \
+             ml_data_analysis.py /data/gh4g-9sfh.csv
+  ```
+  We volume mount the data, instead of actually including it in our container, by using `-v`.
+  And the summary statistics should print out!
+9. To test/run the containerized tests, execute this:
+   ```python
+  docker run --rm \
+             -v $PWD/gh4g-9sfh.csv:/data/gh4g-9sfh.csv \
+             nicoleolv/ml_data_analysis:1.0 \
+             pytest
+  ```
 
-
-## Interpreting the Results
-The output of `ml_data_analysis` provide a series of numbers that help the user gain clarity on the meteorite landings data. First, all the years are printed along with a number that depicts the amount of meteorites that landed on that year. Second, the user is asked to input a mass that will be used to compare to the other meteorites mass, giving the user an overview of how heavy/light these meteorites are. Lastly, the name of the meteorite that landed closest to the UT Tower is provided along with that distance itself. 
+## Overview
+Overall, my docker image illustrates a program used to print summary statistics on meteorite landings data. The output of `ml_data_analysis` provide a series of numbers that help the user gain clarity on the meteorite landings data. First, all the years are printed along with a number that depicts the amount of meteorites that landed on that year. Second, the meteorites masses are compared to 100g, giving the user an overview of how heavy/light these meteorites are. Lastly, the name of the meteorite that landed closest to the UT Tower is provided along with that distance itself. 
 
 
