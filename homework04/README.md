@@ -27,7 +27,7 @@ This repository contains a main script and a testing script that analyze and tes
    ```
    To build my image I would execute:
    ```python
-   docker build -t nicoleolv/iss_tracker.py:1.0 . 
+   docker build -t nicoleolv/iss_tracker.py . 
    ```
    **DO NOT FORGET THE DOT . AT THE END & MAKE SURE YOU'RE IN THE DIRECTORY (homework04) THAT CONTAINS ALL YOUR FILES**
 8. Ensure your image has been built by executing this command:
@@ -41,19 +41,14 @@ This repository contains a main script and a testing script that analyze and tes
    ```
 9. Then, to test/run the containerized code, execute this:
    ```python
-     docker run --rm -it nicoleolv/iss_tracker:1.0 /bin/bash
-   ```
-   And then this:
-   ```python
-   iss_tracker.py
+     docker run iss_tracker
    ```
    And the summary statistics should print out!
-   or
+   
+    To test/run the containerized tests.
    ```python
-   test_iss_tracker.py
+   docker run iss_tracker pytest
    ```
-  To test/run the containerized tests.
-
 ## Overview
 Overall, my docker image illustrates a program used to print summary statistics on ISS trajectory data. The output of `iss_tracker.py` provide a series of statistics that help the user gain clarity on the ISS trajectory data. First, a range of the data using timestamps to illustrate when this data was gathered (on a 15 day period). Second, the full epoch closest to 'now' (now being when the program is executed) is printed, providing the user with the velocity and timestamp of the ISS. Third, the average speed of the whole 15-day period trajectory is printed, giving the user an overview of how fast the ISS is moving. Lastly, the instantaneous speed closest to 'now' is printed. 
 
