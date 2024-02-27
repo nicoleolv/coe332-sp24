@@ -56,10 +56,16 @@ def epochs():
         offset = request.args.get('offset',0)
         try:
                 limit = int(limit)
+        except ValueError:
+                return "Invalid parameters, must be an integer"
+        try:
                 offset = int(offset)
         except ValueError:
                 return "Invalid parameters, must be an integer"
-        
+
+        limit = int(limit)
+        offset = int(offset)
+
         return_data = []
         item_count = 0
         for item in data:
@@ -67,11 +73,11 @@ def epochs():
                 return_data.append(item)
             item_count += 1
 
-            if len(return_data) >= limit:
-                break
-
+            if item_count >= limit:
+                return(return_data)
+        
         return jsonify(return_data)
-            
+
 @app.route('/epochs/<epoch>', methods=['GET'])
 def specific_epoch(epoch: str) -> str:
         """
