@@ -29,16 +29,20 @@ def hgnc_data():
         rd.flushdb()
         return 'Data deleted from Redis succesfully\n', 200
 
-@app.route('/gene', methods=['GET'])
+@app.route('/genes', methods=['GET'])
 def hgnc_ids():
     """
     Returns json-formatted list of all hgnc_ids
     """
     keys = rd.keys()
-    hgnc_ids = [key.decode('utf-8') for key in keys]
-    return jsonify(hgnc_ids), 200
+    gene_data = []
+    for key in keys:
+        gene_id = key.decode('utf-8')
+        gene = rd.get(key)
+        gene_data.append({gene_id: json.loads(gene)})
+    return jsonify(gene_data), 200
         
-@app.route('/gene/<hgnc_id>', methods=['GET'])
+@app.route('/genes/<hgnc_id>', methods=['GET'])
 def specific_hgnc_id(hgnc_id):
     """
     Returns all data associated with the given hgnc_id
