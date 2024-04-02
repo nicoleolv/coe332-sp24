@@ -1,0 +1,36 @@
+---
+version: "3"
+
+services:
+    redis-db:
+        image: redis:7
+        ports:
+            - 6379:6379
+        volumes:
+            - ./data:/data
+        user: "1000:1000"
+        command: ["--save", "1", "1"]
+
+    flask-api:
+	build:
+	    context: ./
+	    dockerfile: Dockerfile
+	image: nicoleolv/app-demo:1.0
+        command: ["python3", "api.py"]
+	ports:
+	    - 5000:5000
+	depends_on:
+	    - redis-db
+	ENVIRONMENT_VARIABLE:
+	    "key":"value"
+	command:["python3", "api.py"]
+    worker:
+	build:
+            context: ./
+            dockerfile: Dockerfile
+        image: nicoleolv/app-demo:1.0
+        command: ["python3", "api.py"]
+        depends_on:
+            - redis-db
+        command:["python3", "worker.py"]
+	
