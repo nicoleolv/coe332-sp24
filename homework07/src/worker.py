@@ -4,7 +4,7 @@ import time
 @q.worker
 def do_work(jobid):
     update_job_status(jobid, 'in progress')
-    time.sleep(15)   # rd.get() ... do some analysis
+    time.sleep(30)   # rd.get() ... do some analysis
     update_job_status(jobid, 'complete')
 
 do_work()
