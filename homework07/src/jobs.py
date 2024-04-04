@@ -2,8 +2,9 @@ import json
 import uuid
 import redis
 from hotqueue import HotQueue
+import os
 
-_redis_ip='redis-db'
+_redis_ip = os.environ.get('REDIS_IP')
 _redis_port='6379'
 
 rd = redis.Redis(host=_redis_ip, port=6379, db=0)
@@ -23,8 +24,8 @@ def _instantiate_job(jid, status, start, end):
     """
     return {'id': jid,
             'status': status,
-            'start': start,
-            'end': end }
+            'gene_id': start,
+            'gene_status': end }
 
 def _save_job(jid, job_dict):
     """Save a job object in the Redis database."""

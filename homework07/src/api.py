@@ -10,7 +10,22 @@ app = Flask(__name__)
 
 rd = redis.Redis(host='redis-db', port=6379, db=0)
 url = 'https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
-# change url maybe
+
+@app.route('/jobs', methods=['POST', 'GET'])
+def sumbmit_job():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'hgnc_id' not in data or 'status' not in data: 
+            return jsonify({"error": "Incorrect parameters, will not submit job. Please provide a hgnc_id or status"})
+        job_dict = add_job(data['hgnc_id'], data['status'])   
+        return job_dict
+    elif request.method == 'GET':
+        job_ids = [job.decode('utf-8') for job in rd.keys()]
+        return job_ids
+
+@app.route('/jobs/<jobid>', methods=['GET'])
+def get_job(jobid):
+    return get_job_by_id(jobid)
 
 # modify based on new data set
 @app.route('/data', methods=['GET', 'POST', 'DELETE'])
@@ -56,23 +71,6 @@ def specific_hgnc_id(hgnc_id):
         return gene_data, 200
     else:
         return 'Gene ID not found\n', 404
-
-@app.route('/jobs', methods=['POST', 'GET'])
-def sumbmit_job():
-    # do something with add_job
-    if request.method == 'POST':
-        data = request.get_json()
-        job_dict = add_job(data['start'], data['end'])   # change start & end to something that makes sense with our data 
-        return job_dict
-    elif request.method == 'GET':
-        data = request.get_json()
-        # do something here 
-        
-        return something 
-    
-@app.route('/jobs/<jobid>', methods=['GET'])
-def get_job(jobid):
-    return get_job_by_id(jobid)
     
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
