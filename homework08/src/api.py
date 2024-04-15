@@ -29,13 +29,17 @@ def get_results(jobid):
 @app.route('/jobs', methods=['POST', 'GET'])
 def sumbmit_job():
     """
-    Posts/Gets a job by filtering through the data, extracting date_modified and status for each gene 
+    Posts/Gets a job by filtering through the data, extracting date_modified for each gene and making a new dicitionary holding all the genes within the specified range 
     """
     if request.method == 'POST':
         data = request.get_json()    
-        if 'date_modified' not in data or 'status' not in data:   
-            return jsonify({"error": "Incorrect parameters, will not submit job. Please provide a date and status"})
-        job_dict = add_job(data['date_modified'], data['status'])   
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+
+        if not start_date or not end_date:
+            return jsonify({"error": "Please specify a start and end date."})
+
+        job_dict = add_job(start_date, end_date)   
         return job_dict
     elif request.method == 'GET':
         job_ids = [job.decode('utf-8') for job in rd.keys()]
