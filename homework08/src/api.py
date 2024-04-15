@@ -10,9 +10,13 @@ app = Flask(__name__)
 
 rd = redis.Redis(host='redis-db', port=6379, db=0)
 url = 'https://g-a8b222.dd271.03c0.data.globus.org/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
+res = redis.Redis(host=_redis_ip, port=6379, db=3)
 
 @app.route('/results/<jobid>', methods=['GET'])
 def get_results(jobid):
+    """
+    Returns the analysis the worker made given a job id
+    """
     try:
         job_data = get_job_by_id(jobid)
         if job_data['status'] == 'complete':
@@ -25,7 +29,7 @@ def get_results(jobid):
 @app.route('/jobs', methods=['POST', 'GET'])
 def sumbmit_job():
     """
-    Posts/Gets a job by filtering through the data, extracting date_modified and status for each gene ... 
+    Posts/Gets a job by filtering through the data, extracting date_modified and status for each gene 
     """
     if request.method == 'POST':
         data = request.get_json()    
