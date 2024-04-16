@@ -94,3 +94,6 @@ To interact with the Flask API, use `curl` commmands as shown below:
 
 ## Overview
 Overall, this Flask Web Application and use of the Redis Database provides an easy way to analyze this large set of data. The whole data may be returned & may be deleted, or only the data associated with hgnc_ids of one OR all, while also being able to post a job that the worker will perform an analysis on. It returns all this data fast and efficiently with the help of Redis and Flask!  
+
+### Software Diagram
+![diagram](https://github.com/nicoleolv/coe332-sp24/blob/main/homework08/diagram.png)
