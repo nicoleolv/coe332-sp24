@@ -7,10 +7,14 @@ This repository contains a full flask application with redis to analyze data abo
 ## Summary of Contents
 * `api.py`: Flask web application with redis database
 * `worker.py`: Handles all jobs processed from the redis queue
-* `jobs.py`: Contains functions for creating, retrieving, and updating jobs in the redis queue 
+* `jobs.py`: Contains functions for creating, retrieving, and updating jobs in the redis queue
+* `test_api.py`: Tests all the api.py functions with a sample data
+* `test_jobs.py`: Tests all the jobs.py functions with a sample data
+* `test_worker.py`: Tests all the worker.py functions with a sample data
 * `requirements.txt`: Lists all of the necessary Python depenedencies to run our app
 * `Dockerfile`: Contains instructions to build our docker image
 * `docker-compose.yml`: Configuration file that allows for a simplified `docker run` command
+* `diagram.png`: Software diagram that depicts our working environment 
 
 ## Data
 The HGNC data is available to the public and can be downloaded from their website; https://www.genenames.org/download/archive/ . This data contains a lot of specifications for each gene. For a better understanding of what the data yields, I recommend reading the paragraphs provided (on the website) and taking a look at the data itself. 
@@ -64,7 +68,7 @@ To interact with the Flask API, use `curl` commmands as shown below:
   ```
   * To create a job:
    ```python
-  curl localhost:5000/jobs -X POST -d '{"gene_id":<HGNC:5>, "gene_status":<Approved>}' -H "Content-Type: application/json"
+  curl localhost:5000/jobs -X POST -d '{"start_date":<2010-11-25>, "end_date":<2018-03-21>}' -H "Content-Type: application/json"
   ```
   * To list all jobs on the queue:
    ```python
@@ -74,14 +78,22 @@ To interact with the Flask API, use `curl` commmands as shown below:
     ```python
     curl localhost:5000/jobs/<jobid>
     ```
+* To get the results of a job:
+  ```python
+  curl localhost:5000/results/<jobid>
+  ```
 
 ## Interpreting the Output 
 * `/data` (GET) route returns a list of the whole data
 * `/genes` route returns a list of all the hgnc_ids
 * `/genes/<hgnc_id>` route returns a list of all the data associated with a specific hgnc, including its location, symbol, status, name, and much more
 * `/jobs` (GET) route returns all exisiting job ids
-          (POST) route creates a new job with a unique identifier 
-* `/jobs/<jobid>` returns the job information for a given job ID including its status (if it has been completed) 
+          (POST) route creates a new job with a unique identifier by specifying a date range with 'start_date' and 'end_date' 
+* `/jobs/<jobid>` returns the job information for a given job ID including its status (if it has been completed)
+* `/results/<jobid>` returns the job results (done by the worker) for a given job ID, returning the amount of genes that were approved from given 'start_date' and 'end_date'
 
 ## Overview
-Overall, this Flask Web Application and use of the Redis Database provides an easy way to analyze this large set of data. The whole data may be returned & may be deleted, or only the data associated with hgnc_ids of one OR all. It returns all this data fast and efficiently with the help of Redis and Flask!  
+Overall, this Flask Web Application and use of the Redis Database provides an easy way to analyze this large set of data. The whole data may be returned & may be deleted, or only the data associated with hgnc_ids of one OR all, while also being able to post a job that the worker will perform an analysis on. It returns all this data fast and efficiently with the help of Redis and Flask!  
+
+### Software Diagram
+![diagram](https://github.com/nicoleolv/coe332-sp24/blob/main/homework08/diagram.png)
